@@ -74,11 +74,6 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-
-        {/* Demo credentials hint */}
-        <div className="mt-4 p-3 rounded-xl bg-amber-50 border border-amber-100 text-xs text-amber-700">
-          <strong>Demo:</strong> admin@hospital.com / password123
-        </div>
       </div>
     </div>
   );
