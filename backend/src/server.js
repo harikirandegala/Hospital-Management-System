@@ -30,6 +30,7 @@ import { notFound } from './middleware/notFound.js';
 config();
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
 // ─── Socket.IO (real-time notifications) ─────────────────
