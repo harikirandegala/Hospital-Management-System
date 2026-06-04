@@ -3,7 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { createServer } from 'http';
-import { Server as SocketServer } from 'socket.io';
+import { initSocket } from './config/socket.js';
 import { config } from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
@@ -34,15 +34,7 @@ app.set('trust proxy', 1);
 const httpServer = createServer(app);
 
 // ─── Socket.IO (real-time notifications) ─────────────────
-export const io = new SocketServer(httpServer, {
-  cors: { origin: process.env.CLIENT_URL, methods: ['GET', 'POST'] }
-});
-
-io.on('connection', (socket) => {
-  logger.info(`Socket connected: ${socket.id}`);
-  socket.on('join_room', (userId) => socket.join(`user_${userId}`));
-  socket.on('disconnect', () => logger.info(`Socket disconnected: ${socket.id}`));
-});
+initSocket(httpServer);
 
 // ─── Rate limiting ────────────────────────────────────────
 const limiter = rateLimit({
@@ -98,7 +90,7 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ DB connected!');
 
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log('✅ Models synced!');
 
     httpServer.listen(PORT, () => {
