@@ -8,11 +8,34 @@ import toast from 'react-hot-toast';
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     setLoading(true);
+     // Demo login
+  if (
+    data.email === 'demo@hospital.com' &&
+    data.password === 'demo123'
+  ) {
+    setAuth(
+      {
+        id: 'demo',
+        name: 'Demo Admin',
+        email: 'demo@hospital.com',
+        role: 'admin'
+      },
+      'demo-token',
+      'demo-refresh'
+    );
+
+    toast.success('Welcome Demo Admin!');
+    navigate('/dashboard');
+    setLoading(false);
+    return;
+  }
+
     try {
       const res = await authApi.login(data);
       setAuth(res.data.user, res.data.access_token, res.data.refresh_token);
@@ -53,13 +76,29 @@ export default function LoginPage() {
 
             <div>
               <label className="label">Password</label>
-              <input
-                type="password"
-                className={`input ${errors.password ? 'border-red-300' : ''}`}
-                placeholder="••••••••"
-                {...register('password', { required: 'Password is required' })}
-              />
-              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+
+<div className="relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    className={`input ${errors.password ? 'border-red-300' : ''}`}
+    placeholder="••••••••"
+    {...register('password', { required: 'Password is required' })}
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm"
+  >
+    {showPassword ? "Hide" : "Show"}
+  </button>
+</div>
+
+{errors.password && (
+  <p className="text-red-500 text-xs mt-1">
+    {errors.password.message}
+  </p>
+)}
             </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-2.5">
