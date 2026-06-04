@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import { sequelize } from '../config/database.js';
 import { Appointment, Doctor, Patient, User } from '../models/index.js';
-import { io } from '../server.js';
+import { getIO } from '../config/socket.js';
 import { addMinutes, startOfDay, endOfDay, parseISO, format } from 'date-fns';
 
 // ─── Helper: generate slots for a doctor on a given date ──
@@ -142,7 +142,7 @@ export const createAppointment = async (req, res, next) => {
     await t.commit();
 
     // Real-time notification to doctor
-    io.to(`user_${doctor.user_id}`).emit('new_appointment', {
+    getIO().to(`user_${doctor.user_id}`).emit('new_appointment', {
       message: 'New appointment booked.',
       appointment_id: appt.id
     });
