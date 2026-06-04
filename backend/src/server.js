@@ -92,20 +92,21 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    await sequelize.authenticate();
-    logger.info('✅ Database connection established.');
+    console.log('🔍 DATABASE_URL exists:', !!process.env.DATABASE_URL);
+    console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
 
-    // In production use migrations; in dev, sync with alter:true cautiously
-    if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: true });
-      logger.info('✅ Database models synchronised.');
-    }
+    await sequelize.authenticate();
+    console.log('✅ DB connected!');
+
+    await sequelize.sync({ alter: true });
+    console.log('✅ Models synced!');
 
     httpServer.listen(PORT, () => {
-      logger.info(`🚀 HMS server running on port ${PORT} [${process.env.NODE_ENV}]`);
+      console.log(`🚀 Running on port ${PORT}`);
     });
   } catch (err) {
-    logger.error('❌ Server startup failed:', err);
+    console.error('❌ ERROR MESSAGE:', err.message);
+    console.error('❌ ERROR NAME:', err.name);
     process.exit(1);
   }
 }
