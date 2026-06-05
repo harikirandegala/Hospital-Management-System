@@ -150,6 +150,42 @@ All endpoints require `Authorization: Bearer <token>` except auth routes.
 - ✅ Structured logging (Winston)
 - ✅ Docker Compose dev environment
 
+---
+
+## 🚀 Production Deployment
+
+The application is **fully configured for production** deployment on:
+- **Frontend**: Vercel
+- **Backend**: Render
+- **Database**: Supabase (PostgreSQL)
+
+### Quick Deploy (5-10 minutes)
+
+1. **Supabase** (Create PostgreSQL database)
+2. **Render** (Deploy backend with DATABASE_URL)
+3. **Vercel** (Deploy frontend with API URLs)
+
+📖 **See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for complete step-by-step instructions**
+
+### Environment Variables Ready
+
+✅ Automatic Supabase PostgreSQL support via DATABASE_URL
+✅ Frontend API URL configuration via VITE_API_URL
+✅ Socket.IO URL configuration via VITE_SOCKET_URL
+✅ Production logging with Winston
+✅ Connection pooling for Supabase
+✅ Security headers with Helmet
+✅ Rate limiting enabled
+
+### Documentation
+
+- 📖 [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) — Step-by-step deployment
+- 📋 [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) — Pre/post deployment checks
+- 💻 [LOCAL_SETUP.md](./LOCAL_SETUP.md) — Local development setup
+- 📊 [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) — Configuration overview
+
+---
+
 ## Remaining TODOs (stubs ready)
 
 - [ ] Patient CRUD controller

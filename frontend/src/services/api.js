@@ -1,8 +1,20 @@
 import axios from 'axios';
 import { useAuthStore } from '../context/authStore.js';
 
+// Determine API base URL based on environment
+const getBaseURL = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // Fallback for development
+  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+    return '/api';
+  }
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: getBaseURL(),
   headers: { 'Content-Type': 'application/json' }
 });
 
@@ -24,7 +36,8 @@ api.interceptors.response.use(
       if (!refreshToken) { clearAuth(); window.location.href = '/login'; return; }
 
       try {
-        const { data } = await axios.post('/api/auth/refresh', { refresh_token: refreshToken });
+        const refreshUrl = `${getBaseURL()}/auth/refresh`;
+        const { data } = await axios.post(refreshUrl, { refresh_token: refreshToken });
         setAuth(useAuthStore.getState().user, data.access_token, data.refresh_token);
         original.headers.Authorization = `Bearer ${data.access_token}`;
         return api(original);

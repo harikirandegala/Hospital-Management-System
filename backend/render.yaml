@@ -1,0 +1,36 @@
+# ═══════════════════════════════════════════════════════════
+# Render Web Service Configuration
+# Deploy this on Render.com
+# ═══════════════════════════════════════════════════════════
+
+services:
+  - type: web
+    name: hms-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hms-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CLIENT_URL
+        value: https://your-frontend-vercel-url.vercel.app
+    disk:
+      name: logs
+      mountPath: /app/logs
+      sizeGB: 1
+
+databases:
+  - name: hms-db
+    databaseName: hms_db
+    user: hms_user
+    region: singapore # Change as needed

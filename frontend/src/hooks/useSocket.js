@@ -10,11 +10,27 @@ export function useSocket() {
   useEffect(() => {
     if (!user) return;
 
-    socketRef.current = io('/', { withCredentials: true });
+    // Determine Socket.IO URL based on environment
+    const socketURL = import.meta.env.VITE_SOCKET_URL 
+      ? import.meta.env.VITE_SOCKET_URL
+      : window.location.origin;
+
+    socketRef.current = io(socketURL, { 
+      withCredentials: true,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5
+    });
     const socket = socketRef.current;
 
     socket.on('connect', () => {
+      console.log('Socket connected');
       socket.emit('join_room', user.id);
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
     });
 
     socket.on('new_appointment', ({ message, appointment_id }) => {

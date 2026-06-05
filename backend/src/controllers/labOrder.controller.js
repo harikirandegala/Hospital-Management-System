@@ -1,6 +1,6 @@
 import { LabOrder, Doctor, Patient, User } from '../models/index.js';
 import { Op } from 'sequelize';
-import { io } from '../server.js';
+import { getIO } from '../config/socket.js';
 
 // GET /api/lab-orders
 export const getLabOrders = async (req, res, next) => {
